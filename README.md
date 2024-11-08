@@ -13,3 +13,9 @@ Methods
 Proposed timeline
 Organization within the team: A list of internal milestones up until project Milestone P3.
 Questions for TAs (optional): Add here any questions you have for us related to the proposed project.
+
+
+In this analysis, we investigate how pivotal historical events shaped the cinema industry mainly in the United States, examining shifts in film production, character representation, and thematic content. We focus on how events such as the two World Wars, the Vietnam War, and the Cold War impacted the types and tones of movies produced, particularly in genres like war, drama, and science fiction. Additionally, we explore the rise of women's and ethnic minority representation, considering how social movements like U.S. Civil Rights and women's suffrage may have influenced not just the number of roles but also the nature of these roles.
+Our dataset combines information from CMU and IMDB, focusing specifically on U.S. films, including details such as genre, plot sentiment, popularity, ethnicity of cast members, and box office success. By tracking these features across significant historical milestones, we aim to reveal patterns—such as the possible surge of patriotic films during the Cold War or shifts in societal themes following the 9/11 attacks.
+Moreover, events like the space race and the advent of the internet sparked an expansion in science fiction, reflecting society's imagination of future technology and outer space. The financial crises, like the Great Depression and the 2008 subprime mortgage crisis, may also have influenced cinema, possibly reducing production or favoring themes of survival and resilience.
+Through sentiment analysis and the popularity index, we will further assess the mood of cinema in relation to these events, observing how public sentiment and socio-political events interacted to shape the film industry.
