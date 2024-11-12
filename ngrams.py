@@ -8,7 +8,7 @@ import pickle
 
 SUMMARIES_PATH = "MovieSummaries/plot_summaries.txt"
 N = 3 # N as is N-Gram
-RESULTS_PATH = f"{N}gram_results.pkl"
+RESULTS_PATH = f"results/{N}gram_results.pkl"
 
 
 def main():
