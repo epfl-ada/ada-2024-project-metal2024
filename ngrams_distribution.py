@@ -4,7 +4,7 @@ import pickle
 from tqdm import tqdm_gui
 from collections import Counter, defaultdict
 
-N = 1 # N as in Ngram
+N = 3 # N as in Ngram
 TOP_NGRAM = 10 # TOP N ngram per year
 DATASET_PATH = "MovieSummaries/"
 GROUPBY = ["year", "decade"][1]
@@ -20,11 +20,12 @@ def main():
     ngrams_dict = dict(ngrams)
 
     movies_ids = movies_ids.groupby("Movie release date").agg(list).reset_index()
+    movies_ids["Number of movies"] = movies_ids["Wikipedia movie ID"].apply(lambda x: len(x))
 
     movies_ids[f"top {TOP_NGRAM} {N}grams"] = movies_ids["Wikipedia movie ID"].apply(lambda x: count_ngrams(x, ngrams_dict))
     #movies_ids[f"most 5 common {N}grams"] = movies_ids[f"{N}grams"].apply(lambda x: x.most_common(5))
 
-    movies_ids[["Movie release date", f"top {TOP_NGRAM} {N}grams"]].to_csv(OUTPUT_PATH, index=False)
+    movies_ids[["Movie release date", "Number of movies", f"top {TOP_NGRAM} {N}grams"]].to_csv(OUTPUT_PATH, index=False)
 
 
 
