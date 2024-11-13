@@ -57,11 +57,9 @@ def extract_named_entities(xml_file):
     id, _ = os.path.splitext(os.path.splitext(os.path.basename(xml_file))[0])
     entity_dict["ID"] = id
 
-    # Populate the dictionary
     for name, entity_type in entities:
         entity_dict[entity_type].append(name)
 
-    # Convert to a regular dict if needed
     return dict(entity_dict)
 
 
