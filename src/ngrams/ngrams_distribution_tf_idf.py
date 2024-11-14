@@ -11,7 +11,7 @@ from src.utils import periods_map_inverse
 TOP_N = 10 # TOP N ngram per year or decade
 NGRAM_RANGE = (1,2)
 DATASET_PATH = "DATA/MovieSummaries"
-GROUPBY = ["year", "decade", "period"][-1]
+GROUPBY = ["year", "decade", "period"][1]
 OUTPUT_PATH = f"src/ngrams/results/Ngrams_tfidf_per_{GROUPBY}.csv"
 
 #import json
