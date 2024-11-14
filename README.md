@@ -1,7 +1,5 @@
 ## ADA Project for group METAL2024
 
-Abstract: A 150 word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?  
-
 In this analysis, we will investigate how pivotal historical events shaped the cinema industry focusing on the United States, examining shifts in film production, character representation, and thematic content. We will focus on how historic events and periods such as World Wars impacted the types and tones of movies produced. Additionally, we explore the rise of women's and ethnic minority representation, considering how social movements like U.S. Civil Rights and women's suffrage may have influenced not just the number of roles but also the nature of these roles. 
 Moreover, events like the space race and the advent of the internet sparked an expansion in science fiction, reflecting society's imagination of future technology and outer space. The financial crises, like the Great Depression may also have influenced cinema, possibly reducing production or favoring themes of survival and resilience.
 
