@@ -48,7 +48,7 @@ Organization within the team: A list of internal milestones up until project Mil
 
 Where to find the work done: 
 - results.ipynb contains the first glimpse at the different vizualizations done 
-- data/datapreprocessing.ipynb contains the preprocessing steps done until now, and merging steps with IMDB data
+- src/datapreprocessing.ipynb contains the preprocessing steps done until now, and merging steps with IMDB data
 - named_entities and ngrams are in src/ their respective folders. Generated using according scripts on plot summaries
 
 Questions for TAs (optional): Add here any questions you have for us related to the proposed project.  
