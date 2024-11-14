@@ -5,12 +5,12 @@ from tqdm import tqdm_gui
 from collections import Counter, defaultdict
 
 N = 3 # N as in Ngram
-TOP_NGRAM = 10 # TOP N ngram per year
+TOP_NGRAM = 10 # TOP N ngram per year or decade
 DATASET_PATH = "MovieSummaries/"
 GROUPBY = ["year", "decade"][1]
 # please run ngrams.py before to generate the ngram below
-NGRAM_PATH = f"results/morethan100MB/{N}gram_results.pkl"
-OUTPUT_PATH = f"results/{N}grams_per_{GROUPBY}.csv"
+NGRAM_PATH = f"ngrams/results/morethan100MB/{N}gram_results.pkl"
+OUTPUT_PATH = f"ngrams/results/{N}grams_per_{GROUPBY}.csv"
 
 
 
