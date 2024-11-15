@@ -9,7 +9,7 @@ from tqdm import tqdm_gui as tqdm # remove _gui if you dont like the GUI and wan
 import numpy as np
 import pickle
 
-SUMMARIES_PATH = "DATA/processed_plot_summaries.csv"
+SUMMARIES_PATH = "data/processed_plot_summaries.csv"
 N = 3 # N as is N-Gram
 RESULTS_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 
