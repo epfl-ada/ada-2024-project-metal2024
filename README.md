@@ -41,13 +41,13 @@ Organization within the team: A list of internal milestones up until project Mil
 - Lilly-Flore: Theme validation and Data exploration notebook  
 - Mathis: Abstract and Theme validation. Timeline events selection
 - Timo: Data preprocessing and merging with IMDB sources
-- Anoush: Sentiment analyzer and Ngrams/named_entities
+- Anoush: Sentiment analyzer and Ngrams,tf-idf/named_entities
 - Emilien: Data preprocessing and filtering, ReadMe report
 
 Where to find the work done: 
-- results.ipynb contains the first glimpse at the different vizualizations done 
-- src/datapreprocessing.ipynb contains the preprocessing steps done until now, and merging steps with IMDB data
-- named_entities and ngrams are in src/ their respective folders. Generated using according scripts on plot summaries
+- `results.ipynb` contains the first glimpse at the different vizualizations done 
+- `src/datapreprocessing.ipynb` contains the preprocessing steps done until now, and merging steps with IMDB data. 
+- `named_entities`, `ngrams`, `ngrams_tf_idf` are in `src/` their respective folders. They are usually computed with their `.py` scripted and their result by `year`,`decade` or `period` are computed with their `_distribution.py` script. The results are stored in their `results/` folder
 
 Questions for TAs (optional): Add here any questions you have for us related to the proposed project.  
 
