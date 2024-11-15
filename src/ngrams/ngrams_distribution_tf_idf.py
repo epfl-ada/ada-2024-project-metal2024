@@ -8,11 +8,11 @@ import sys
 sys.path.append(".")
 from src.utils import periods_map_inverse
 
-TOP_N = 10 # TOP N ngram per year or decade
+TOP_N = 20 # TOP N ngram per year or decade
 NGRAM_RANGE = (1,3)
 DATASET_PATH = "DATA/"
 GROUPBY = ["year", "decade", "period"][1]
-OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]-NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv"
+OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv"
 
 def main():
     movies_ids, movie_plots_df = inputs()
@@ -20,11 +20,10 @@ def main():
     movies_ids = movies_ids.groupby("Movie release date").agg(list).reset_index()
     movies_ids["Number of movies"] = movies_ids["Wikipedia movie ID"].apply(lambda x: len(x))
 
-    movies_ids[f"Ngrams and score"] = movies_ids["Wikipedia movie ID"].apply(lambda x: tfidf_ranking(x, NGRAM_RANGE, TOP_N, movie_plots_df))
+    movies_ids["Ngrams and score"] = movies_ids["Wikipedia movie ID"].apply(lambda x: tfidf_ranking(x, NGRAM_RANGE, TOP_N, movie_plots_df))
     #movies_ids[f"most 5 common {N}grams"] = movies_ids[f"{N}grams"].apply(lambda x: x.most_common(5))
 
     movies_ids[["Movie release date", "Number of movies", "Ngrams and score"]].to_csv(OUTPUT_PATH, index=False)
-
 
 
 def inputs():
@@ -58,9 +57,11 @@ def inputs():
     if GROUPBY == "period":
         movies_df["Movie release date"] = movies_df["Movie release date"].apply(get_period)
     else:
-        movies_df["Movie release date"] = pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
+        movies_df["Movie release date"] = movies_df["Movie release date"].astype(int).apply(int_or_empty) #pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
 
-    return movies_df[["Wikipedia movie ID", 'Movie release date']], movie_plots_df
+    movie_plots_df = movie_plots_df.squeeze()
+
+    return movies_df, movie_plots_df #[["Wikipedia movie ID", 'Movie release date']], movie_plots_df
 
 
 def tfidf_ranking(ids: list, ngram_range, top_n, movie_plots_df):
@@ -69,12 +70,16 @@ def tfidf_ranking(ids: list, ngram_range, top_n, movie_plots_df):
     for id in ids:
         try:
             documents.append(
-                movie_plots_df.loc[id]["summary"]
+                movie_plots_df.get(id)
             )
         except:
             continue
     
-    if not documents: return pd.NA
+    documents = [doc for doc in documents if doc]
+    if not documents or documents is None: return pd.NA
+
+
+    
 
     vectorizer = TfidfVectorizer(ngram_range=ngram_range, stop_words='english')
     
@@ -85,6 +90,8 @@ def tfidf_ranking(ids: list, ngram_range, top_n, movie_plots_df):
     
     tfidf_scores = pd.DataFrame({'ngram': feature_names, 'tfidf': scores})
     tfidf_scores = tfidf_scores.sort_values(by='tfidf', ascending=False)
+
+    del documents, feature_names, vectorizer, scores
     
     return tfidf_scores.head(top_n).values
 
