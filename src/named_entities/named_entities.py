@@ -14,7 +14,7 @@ CSV_OUTPUT_PATH = "named_entities/named_entities.csv"
 def main():
 
     gz_files = inputs()
-
+    # extracting named entities from all the gz files
     with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
         results = list(
             tqdm(
@@ -23,13 +23,14 @@ def main():
                 total=len(gz_files)
             )
         )
-    
+    # saving the results
     pd.DataFrame(results).to_csv(CSV_OUTPUT_PATH, index=False)
 
 
 def inputs():
 
     gz_files = []
+    # getting all the .gz files' paths
     for root, _, files in os.walk(CORENLP_PATH):
         for file in files:
             if file.endswith('.gz'):
@@ -38,6 +39,15 @@ def inputs():
 
 
 def extract_named_entities(xml_file):
+    """extract_named_entities
+
+    Args:
+        xml_file: xml_file where to extract named entities
+
+    Returns:
+        dict: dictionary with the named entities
+    """
+    # extracting named entities from the xml file
     with gzip.open(xml_file, 'rt', encoding='utf-8') as f:
         tree = ET.parse(f)
         root = tree.getroot()
@@ -50,7 +60,7 @@ def extract_named_entities(xml_file):
                 if ner != 'O':  # Skip non-entities
                     entities.append((word, ner))
         
-
+    # creating a dictionary with the named entities
     entity_dict = defaultdict(list)
 
     # taking Wikipedia ID from the filename

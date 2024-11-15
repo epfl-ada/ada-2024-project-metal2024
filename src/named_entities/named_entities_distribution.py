@@ -10,6 +10,7 @@ from src.utils import periods_map_inverse
 
 TOP_NAMED_ENTITIES = 20 # TOP NAMED_ENTITIES
 DATASET_PATH = "data/"
+# GROUPBY can be "year", "decade" or "period"
 GROUPBY = ["year", "decade", "period"][1]
 # please run named_identities.py before to generate the csv below
 NE_CSV_PATH = "src/named_entities/named_entities.csv"
@@ -19,8 +20,10 @@ OUTPUT_PATH = f"src/named_entities/results/named_entities_per_{GROUPBY}.csv"
 def main():
     movies_ids, named_entities_df = inputs()
 
+    # creating a map to get the date of a movie by its ID
     id_date_map = movies_ids[["Wikipedia movie ID", "Movie release date"]].set_index("Wikipedia movie ID")
 
+    # get the date of the movie by its ID
     named_entities_df["Movie release date"] = named_entities_df["ID"].apply(
         lambda x: get_date(x, id_date_map))
 
@@ -30,16 +33,15 @@ def main():
     agg_methods = {col: agg_strategy for col in cols_without_id}
     agg_methods.update({"ID": list})
 
-    named_entities_df = named_entities_df.groupby("Movie release date").agg(agg_methods)#.reset_index(drop=True)
-
+    named_entities_df = named_entities_df.groupby("Movie release date").agg(agg_methods)
+    # count the number of movies per year
     named_entities_df['Number of movies'] = named_entities_df["ID"].apply(lambda x: len(x))
 
-    # if GROUPBY is True, we remove the ID col, otherwise we move Number of movies to the first cols
-    #moved_cols = ["Number of movies"] if not (GROUPBY=="decade") else ["Number of movies", "ID"]
+    # reordering the columns
     moved_cols = ["Number of movies", "ID", "Movie release date"]
     named_entities_othercols = [col for col in named_entities_df.columns if col not in moved_cols]
     named_entities_cols = ["Number of movies"] + named_entities_othercols
-    
+    # save the results
     named_entities_df[named_entities_cols].to_csv(OUTPUT_PATH, index=True)
 
 def get_date(id, id_date_map):
@@ -69,6 +71,9 @@ def inputs():
     movies_df.columns = ["Wikipedia movie ID", "Freebase movie ID", "Movie name", "Movie release date", "Movie box office revenue", "Movie runtime", "Movie languages (Freebase ID:name tuples)", "Movie countries (Freebase ID:name tuples)", "Movie genres (Freebase ID:name tuples)"]
 
     def int_or_empty(string):
+        """try to convert the string to int or pd.NA if it fails
+        and if GROUPBY is on decade, then round per decade
+        """
         try:
             year = int(string)
             # if GROUPBY is on decade, then round per decade
@@ -79,6 +84,8 @@ def inputs():
             return pd.NA
         
     def get_period(year):
+        """try to convert the year to period or pd.NA if it fails
+        """
         try:
             return periods_map_inverse[int(year)]
         except:

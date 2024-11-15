@@ -28,13 +28,17 @@ CUSTOM_STOPWORDS = [ # words that will be banned from our Ngram
 
 
 def main():
-    df_summaries = pd.read_csv(SUMMARIES_PATH) #, sep="\t", header=None)
+    df_summaries = pd.read_csv(SUMMARIES_PATH)
+    # renaming columns
     df_summaries.columns = ["ID", "Summary", "Date"]
+    # removing the date column
     df_summaries = df_summaries[["ID", "Summary"]]
+    # converting ID to int
     df_summaries["ID"] = df_summaries["ID"].astype(int)
-
+    # converting to numpy array
     summaries_and_ids = df_summaries.values
 
+    # computing ngrams
     with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
         results: list[list] = list(
             tqdm(
@@ -43,21 +47,26 @@ def main():
             )
         )
 
+    # saving the results
     with open(RESULTS_PATH, "wb") as file:
         pickle.dump(results, file)
 
 def tokenize(text: str) -> list[str]:
     if NLTK_TOKENIZING:
         stop_words = set(stopwords.words("english"))
-        tokens = word_tokenize(text.lower())  # Tokenize and lowercase the text
+        tokens = word_tokenize(text.lower())  
         filtered_tokens = [word for word in tokens if word.isalpha() and word not in stop_words]
         return filtered_tokens
-    
+    # tokenizing the text
     tokens = text.lower().split()
     # removing our custom stopwords
     return [token for token in tokens if token.isalpha() and token not in CUSTOM_STOPWORDS] 
 
 def ngram_computation(summary_and_id: np.ndarray) -> list:
+    """
+    computes ngrams of a summary
+    """
+
     summary: str = summary_and_id[1]
     id: int = summary_and_id[0]
 
