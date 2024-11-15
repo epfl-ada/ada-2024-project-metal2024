@@ -7,10 +7,10 @@ import sys
 sys.path.append(".")
 from src.utils import periods_map_inverse
 
-N = 1 # N as in Ngram
-TOP_NGRAM = 10 # TOP N ngram per year or decade
+N = 3 # N as in Ngram
+TOP_NGRAM = 20 # TOP N ngram per year or decade
 DATASET_PATH = "data/"
-GROUPBY = ["year", "decade", "period"][1]
+GROUPBY = ["year", "decade", "period"][2]
 # please run ngrams.py before to generate the ngram below
 NGRAM_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 OUTPUT_PATH = f"src/ngrams/results/{N}grams_per_{GROUPBY}.csv"
