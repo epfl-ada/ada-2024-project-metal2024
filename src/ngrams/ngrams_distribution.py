@@ -7,15 +7,13 @@ import sys
 sys.path.append(".")
 from src.utils import periods_map_inverse
 
-N = 3 # N as in Ngram
+N = 1 # N as in Ngram
 TOP_NGRAM = 10 # TOP N ngram per year or decade
 DATASET_PATH = "data/"
 GROUPBY = ["year", "decade", "period"][1]
 # please run ngrams.py before to generate the ngram below
 NGRAM_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 OUTPUT_PATH = f"src/ngrams/results/{N}grams_per_{GROUPBY}.csv"
-
-
 
 def main():
     movies_ids, ngrams = inputs()
@@ -61,7 +59,7 @@ def inputs():
     if GROUPBY == "period":
         movies_df["Movie release date"] = movies_df["Movie release date"].apply(get_period)
     else:
-        movies_df["Movie release date"] = pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
+        movies_df["Movie release date"] = movies_df["Movie release date"].astype(int).apply(int_or_empty)  #pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
 
     with open(NGRAM_PATH, "rb") as file:
         ngrams = pickle.load(file)
