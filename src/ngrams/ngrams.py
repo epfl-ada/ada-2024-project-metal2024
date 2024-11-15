@@ -9,9 +9,9 @@ from tqdm import tqdm_gui as tqdm # remove _gui if you dont like the GUI and wan
 import numpy as np
 import pickle
 
-SUMMARIES_PATH = "MovieSummaries/plot_summaries.txt"
-N = 3 # N as is N-Gram
-RESULTS_PATH = f"results/morethan100MB/{N}gram_results.pkl"
+SUMMARIES_PATH = "DATA/MovieSummaries/plot_summaries.txt"
+N = 2 # N as is N-Gram
+RESULTS_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 
 NLTK_TOKENIZING = False
 if NLTK_TOKENIZING:

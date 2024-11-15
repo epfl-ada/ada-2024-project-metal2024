@@ -4,13 +4,16 @@ import pickle
 from tqdm import tqdm_gui
 from collections import Counter, defaultdict
 import ast
+import sys
+sys.path.append(".")
+from src.utils import periods_map_inverse
 
 TOP_NAMED_ENTITIES = 10 # TOP NAMED_ENTITIES
-DATASET_PATH = "MovieSummaries/"
-GROUPBY = ["year", "decade"][0]
+DATASET_PATH = "DATA/MovieSummaries/"
+GROUPBY = ["year", "decade", "period"][-1]
 # please run named_identities.py before to generate the csv below
-NE_CSV_PATH = "named_entities/named_entities.csv"
-OUTPUT_PATH = f"named_entities/distributions/named_entities_per_{GROUPBY}.csv"
+NE_CSV_PATH = "src/named_entities/named_entities.csv"
+OUTPUT_PATH = f"src/named_entities/distributions/named_entities_per_{GROUPBY}.csv"
 
 
 def main():
@@ -32,7 +35,8 @@ def main():
     named_entities_df['Number of movies'] = named_entities_df["ID"].apply(lambda x: len(x))
 
     # if GROUPBY is True, we remove the ID col, otherwise we move Number of movies to the first cols
-    moved_cols = ["Number of movies"] if not (GROUPBY=="decade") else ["Number of movies", "ID"]
+    #moved_cols = ["Number of movies"] if not (GROUPBY=="decade") else ["Number of movies", "ID"]
+    moved_cols = ["Number of movies", "ID", "Movie release date"]
     named_entities_othercols = [col for col in named_entities_df.columns if col not in moved_cols]
     named_entities_cols = ["Number of movies"] + named_entities_othercols
     
@@ -73,8 +77,17 @@ def inputs():
             return year
         except:
             return pd.NA
+        
+    def get_period(year):
+        try:
+            return periods_map_inverse[int(year)]
+        except:
+            return pd.NA  
 
-    movies_df["Movie release date"] = pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
+    if GROUPBY == "period":
+        movies_df["Movie release date"] = movies_df["Movie release date"].apply(get_period)
+    else:
+        movies_df["Movie release date"] = pd.to_datetime(movies_df['Movie release date'], errors='coerce').dt.year.apply(int_or_empty)
 
     named_entities_df = pd.read_csv(NE_CSV_PATH)
 
