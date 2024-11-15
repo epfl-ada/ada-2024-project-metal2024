@@ -10,7 +10,7 @@ from src.utils import periods_map_inverse
 
 TOP_N = 10 # TOP N ngram per year or decade
 NGRAM_RANGE = (1,3)
-DATASET_PATH = "DATA/"
+DATASET_PATH = "data/"
 GROUPBY = ["year", "decade", "period"][1]
 OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]-NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv"
 
