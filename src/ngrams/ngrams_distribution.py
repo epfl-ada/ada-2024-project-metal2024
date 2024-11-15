@@ -9,8 +9,8 @@ from src.utils import periods_map_inverse
 
 N = 3 # N as in Ngram
 TOP_NGRAM = 10 # TOP N ngram per year or decade
-DATASET_PATH = "DATA/MovieSummaries/"
-GROUPBY = ["year", "decade", "period"][-1]
+DATASET_PATH = "DATA/"
+GROUPBY = ["year", "decade", "period"][1]
 # please run ngrams.py before to generate the ngram below
 NGRAM_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 OUTPUT_PATH = f"src/ngrams/results/{N}grams_per_{GROUPBY}.csv"
@@ -36,8 +36,11 @@ def inputs():
     """
     Returns: movies_ids and ngrams
     """
-    movies_df = pd.read_csv(os.path.join(DATASET_PATH,"movie.metadata.tsv"), delimiter="\t", header=None)
-    movies_df.columns = ["Wikipedia movie ID", "Freebase movie ID", "Movie name", "Movie release date", "Movie box office revenue", "Movie runtime", "Movie languages (Freebase ID:name tuples)", "Movie countries (Freebase ID:name tuples)", "Movie genres (Freebase ID:name tuples)"]
+    #movies_df = pd.read_csv(os.path.join(DATASET_PATH,"movie.metadata.tsv"), delimiter="\t", header=None)
+    #movies_df.columns = ["Wikipedia movie ID", "Freebase movie ID", "Movie name", "Movie release date", "Movie box office revenue", "Movie runtime", "Movie languages (Freebase ID:name tuples)", "Movie countries (Freebase ID:name tuples)", "Movie genres (Freebase ID:name tuples)"]
+
+    # importing the already preprocessing movie dataset
+    movies_df = pd.read_csv(os.path.join(DATASET_PATH,"processed_movies.csv"))
 
     def int_or_empty(string):
         try:

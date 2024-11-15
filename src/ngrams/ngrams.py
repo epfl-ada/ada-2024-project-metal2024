@@ -9,8 +9,8 @@ from tqdm import tqdm_gui as tqdm # remove _gui if you dont like the GUI and wan
 import numpy as np
 import pickle
 
-SUMMARIES_PATH = "DATA/MovieSummaries/plot_summaries.txt"
-N = 2 # N as is N-Gram
+SUMMARIES_PATH = "DATA/processed_plot_summaries.csv"
+N = 3 # N as is N-Gram
 RESULTS_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 
 NLTK_TOKENIZING = False
@@ -28,8 +28,9 @@ CUSTOM_STOPWORDS = [ # words that will be banned from our Ngram
 
 
 def main():
-    df_summaries = pd.read_csv(SUMMARIES_PATH, sep="\t", header=None)
-    df_summaries.columns = ["ID", "Summary"]
+    df_summaries = pd.read_csv(SUMMARIES_PATH) #, sep="\t", header=None)
+    df_summaries.columns = ["ID", "Summary", "Date"]
+    df_summaries = df_summaries[["ID", "Summary"]]
     df_summaries["ID"] = df_summaries["ID"].astype(int)
 
     summaries_and_ids = df_summaries.values

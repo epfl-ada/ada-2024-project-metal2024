@@ -9,13 +9,10 @@ sys.path.append(".")
 from src.utils import periods_map_inverse
 
 TOP_N = 10 # TOP N ngram per year or decade
-NGRAM_RANGE = (1,2)
-DATASET_PATH = "DATA/MovieSummaries"
+NGRAM_RANGE = (1,3)
+DATASET_PATH = "DATA/"
 GROUPBY = ["year", "decade", "period"][1]
-OUTPUT_PATH = f"src/ngrams/results/Ngrams_tfidf_per_{GROUPBY}.csv"
-
-#import json
-#json.dump(periods_map_inverse, open("tests/test.json", "w"), indent=4)
+OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]-NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv"
 
 def main():
     movies_ids, movie_plots_df = inputs()
@@ -34,17 +31,12 @@ def inputs():
     """
     Returns: movies_ids and ngrams
     """
-    movies_df = pd.read_csv(os.path.join(DATASET_PATH,"movie.metadata.tsv"), delimiter="\t", header=None)
-    movies_df.columns = ["Wikipedia movie ID", "Freebase movie ID", "Movie name", "Movie release date", "Movie box office revenue", "Movie runtime", "Movie languages (Freebase ID:name tuples)", "Movie countries (Freebase ID:name tuples)", "Movie genres (Freebase ID:name tuples)"]
+    movies_df = pd.read_csv(os.path.join(DATASET_PATH,"processed_movies.csv"))
 
-    movie_plots_df = pd.read_csv(os.path.join(DATASET_PATH, "plot_summaries.txt"),
-    delimiter="\t", header=None)
-    movie_plots_df.columns = ["Wikipedia movie ID", "summary"]
+    movie_plots_df = pd.read_csv(os.path.join(DATASET_PATH, "processed_plot_summaries.csv"))
+    movie_plots_df.columns = ["Wikipedia movie ID", "summary", "date"]
+    movie_plots_df = movie_plots_df[["Wikipedia movie ID", "summary"]]
     movie_plots_df = movie_plots_df.set_index("Wikipedia movie ID")
-
-    #print(movie_plots_df.sample(4))
-    #print(movie_plots_df.loc[2257358]["summary"])
-
 
     def int_or_empty(string):
         try:

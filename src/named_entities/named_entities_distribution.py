@@ -9,7 +9,7 @@ sys.path.append(".")
 from src.utils import periods_map_inverse
 
 TOP_NAMED_ENTITIES = 10 # TOP NAMED_ENTITIES
-DATASET_PATH = "DATA/MovieSummaries/"
+DATASET_PATH = "DATA/"
 GROUPBY = ["year", "decade", "period"][-1]
 # please run named_identities.py before to generate the csv below
 NE_CSV_PATH = "src/named_entities/named_entities.csv"
