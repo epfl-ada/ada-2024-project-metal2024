@@ -1,8 +1,7 @@
 import pandas as pd
 import os
 import pickle
-from tqdm import tqdm_gui
-from collections import Counter, defaultdict
+from collections import Counter
 import sys
 sys.path.append(".")
 from src.utils import periods_map_inverse

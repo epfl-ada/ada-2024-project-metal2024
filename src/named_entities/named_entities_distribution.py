@@ -1,8 +1,6 @@
 import pandas as pd
 import os
-import pickle
-from tqdm import tqdm_gui
-from collections import Counter, defaultdict
+from collections import Counter
 import ast
 import sys
 sys.path.append(".")

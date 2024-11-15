@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import gzip
 import os
 from collections import defaultdict
-from tqdm import tqdm_gui as tqdm
+from tqdm import tqdm_gui as tqdm # remove _gui if you dont like the GUI and want CLI
 import multiprocessing
 import pandas as pd
 

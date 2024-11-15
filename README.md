@@ -49,6 +49,3 @@ Where to find the work done:
 - `src/datapreprocessing.ipynb` contains the preprocessing steps done until now, and merging steps with IMDB data. 
 - `named_entities`, `ngrams`, `ngrams_tf_idf` are in `src/`, in their respective folders. They are computed with their `.py` script, which produces an intermediate result, that is serialized. Finally the results grouped by `year`,`decade` or `period` are computed with their `_distribution.py` script. The results are stored in their `results/` folder.
 
-Questions for TAs (optional): Add here any questions you have for us related to the proposed project.  
-
-

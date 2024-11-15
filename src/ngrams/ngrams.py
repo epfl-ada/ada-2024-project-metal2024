@@ -1,5 +1,4 @@
 import pandas as pd
-from collections import defaultdict
 from nltk.util import ngrams 
 import nltk
 from nltk.corpus import stopwords
