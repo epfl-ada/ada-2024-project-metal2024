@@ -51,8 +51,8 @@ def main():
     df_matched_period0 = df_named_entities.loc[df_named_entities["ID"].isin(matchings_period0)]
     df_matched_period1 = df_named_entities.loc[df_named_entities["ID"].isin(matchings_period1)]
 
-    df_matched = pd.concat([df_matched_period0, df_matched_period1])
-    df_matched.to_csv("src/causal_inference/matched.csv", index=False)
+    #df_matched = pd.concat([df_matched_period0, df_matched_period1])
+    #df_matched.to_csv("src/causal_inference/matched.csv", index=False)
 
     plots(df_matched_period0, df_matched_period1)
 
