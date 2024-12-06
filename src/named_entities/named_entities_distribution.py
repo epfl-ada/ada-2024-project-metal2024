@@ -4,12 +4,12 @@ from collections import Counter
 import ast
 import sys
 sys.path.append(".")
-from src.utils import periods_map_inverse
+from src.utils import periods_map_inverse, constants, correct_locations
 
 TOP_NAMED_ENTITIES = 20 # TOP NAMED_ENTITIES
-DATASET_PATH = "data/"
+DATASET_PATH = constants.DATASET_PATH.value
 # GROUPBY can be "year", "decade" or "period"
-GROUPBY = ["year", "decade", "period"][1]
+GROUPBY = ["year", "decade", "period"][-1]
 # please run named_identities.py before to generate the csv below
 NE_CSV_PATH = "src/named_entities/named_entities.csv"
 OUTPUT_PATH = f"src/named_entities/results/named_entities_per_{GROUPBY}.csv"
@@ -58,6 +58,8 @@ def agg_strategy(cols: pd.Series) -> Counter:
             res.extend(ast.literal_eval(col))
         except:
             continue
+
+    res = correct_locations(pd.Series(res)).to_list()
     return Counter(res).most_common(TOP_NAMED_ENTITIES)
 
 
