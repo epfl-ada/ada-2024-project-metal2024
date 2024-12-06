@@ -39,7 +39,6 @@ def main():
 
     df_propensity_score= logistic_regression(df_movies)
     df_propensity_score = df_propensity_score.sample(SAMPLES)
-    df_propensity_score.to_csv("src/causal_inference/matched.csv", index=False)
 
     matchings = propensity_score_matching(df_propensity_score)
 
