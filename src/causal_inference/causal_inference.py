@@ -56,9 +56,7 @@ def main():
 
     plots(df_matched_period0, df_matched_period1)
 
-def plots(df_matched_period0, df_matched_period1):
-
-    top_n = 15
+def plots(df_matched_period0, df_matched_period1, top_n = 15):
 
     def evaluate_col(col) -> pd.Series:
         res = []
