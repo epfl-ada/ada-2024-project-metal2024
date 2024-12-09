@@ -13,6 +13,7 @@ hosting: https://pages.github.com/
 
 - https://observablehq.com/
     - (très) joli
+    - utilise markdown et javascript (2en 1)
 - https://react.dev/
 - https://angular.dev/
 - https://vuejs.org/
