@@ -13,6 +13,9 @@ hosting: https://pages.github.com/
 
 - https://observablehq.com/
     - (très) joli
+- https://react.dev/
+- https://angular.dev/
+- https://vuejs.org/
 
 graphing librairies:
 
