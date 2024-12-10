@@ -15,6 +15,10 @@ NAMED_ENTITIES_PATH = constants.NAMED_ENTITIES_PATH.value
 # the periods are the keys of the dictionary in src/utils.py
 PERIOD0 = "The Great Depression (1929-1939)"
 PERIOD1 = "The Cold War and McCarthyism (1947-1991)"
+# column for named_entities/named_entities.csv to compare
+COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT"][2]
+# dictionnary mapping the named entities to a preprocessing function if needed
+NAMED_ENTITIES_PREPROCESSING = {"LOCATION": correct_locations}
 # the number of genres to keep for the logistic regression for the propensity score
 # the more genres, the more accurate the results
 TOP_N_GENRES = 30
@@ -66,14 +70,15 @@ def plots(df_matched_period0, df_matched_period1, top_n = 15):
                 continue
 
         return pd.Series(res)
+    
+    preprocessing_function = NAMED_ENTITIES_PREPROCESSING.get(COMPARED, lambda x: x)
         
-
-    location_period0 = correct_locations(evaluate_col(df_matched_period0["LOCATION"])).value_counts().head(top_n)
-    location_period1 = correct_locations(evaluate_col(df_matched_period1["LOCATION"])).value_counts().head(top_n)
+    location_period0 = preprocessing_function(evaluate_col(df_matched_period0[COMPARED])).value_counts().head(top_n)
+    location_period1 = preprocessing_function(evaluate_col(df_matched_period1[COMPARED])).value_counts().head(top_n)
 
     fig, ax = plt.subplots(2, 1, figsize=(10, 10))
-    location_period0.plot(kind="bar", ax=ax[0], title=f"Top {top_n} locations in {PERIOD0} for {df_matched_period0.shape[0]} movies")
-    location_period1.plot(kind="bar", ax=ax[1], title=f"Top {top_n} locations in {PERIOD1} for {df_matched_period1.shape[0]} movies")
+    location_period0.plot(kind="bar", ax=ax[0], title=f"Top {top_n} {COMPARED} in {PERIOD0} for {df_matched_period0.shape[0]} movies")
+    location_period1.plot(kind="bar", ax=ax[1], title=f"Top {top_n} {COMPARED} in {PERIOD1} for {df_matched_period1.shape[0]} movies")
     plt.tight_layout()
     plt.show()
 
