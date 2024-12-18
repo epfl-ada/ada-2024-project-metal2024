@@ -213,10 +213,10 @@ def plot_correlations(pearson_corr_all, spearman_corr_all, pearson_corr_1973, sp
         'Spearman (All Data)', 
         'Pearson (1973)', 
         'Spearman (1973)', 
-        f'Max Pearson ({max_y})', 
-        f'Max Spearman ({max_y})',
-        f'Min Pearson ({min_y})', 
-        f'Min Spearman ({min_y})'
+        f'Maximum Pearson ({max_y})', 
+        f'Maximum Spearman ({max_y})',
+        f'Mininum Pearson ({min_y})', 
+        f'Mininum Spearman ({min_y})'
     
     ]
     
@@ -229,6 +229,8 @@ def plot_correlations(pearson_corr_all, spearman_corr_all, pearson_corr_1973, sp
         y=correlations,
         marker=dict(color=colors)
     )])
+    fig.update_xaxes(tickangle=45)
+
 
     # Update layout
     fig.update_layout(
@@ -236,7 +238,8 @@ def plot_correlations(pearson_corr_all, spearman_corr_all, pearson_corr_1973, sp
         xaxis_title='Correlation Type',
         yaxis_title='Correlation Coefficient',
         template='plotly_white',
-        showlegend=False
+        showlegend=False,
+        height=600
     )
 
     # Show the plot
