@@ -20,10 +20,10 @@ periods_map_ = {
 
 def make_periods_map(periods_map: dict):
     """converting periods map to list with every year in it"""
-    for key, item in periods_map:
+    for key, item in periods_map.items():
         periods_map[key] = list(range(
-            start = item["start_year"],
-            stop = item["end_year"] + 1
+            item["start_year"], # start
+            item["end_year"] + 1 # stop
         ))
     return periods_map
 
@@ -117,6 +117,18 @@ def correct_locations(series: pd.Series) -> pd.Series:
         "Lake": pd.NA,
         "Las": "Las Vegas",
         "Vegas": pd.NA
+    }
+    series = series.apply(lambda x: corrections[x] if x in corrections else x)
+    return series.dropna()
+
+def correct_money(series: pd.Series) -> pd.Series:
+    """group the locations from the named entities
+    without counting the words multiple times
+    """
+    corrections = {
+        "$": "dollars",
+        "USD": "dollars",
+        "dollar": "dollars"
     }
     series = series.apply(lambda x: corrections[x] if x in corrections else x)
     return series.dropna()
