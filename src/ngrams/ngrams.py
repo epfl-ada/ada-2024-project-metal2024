@@ -27,6 +27,9 @@ CUSTOM_STOPWORDS = [ # words that will be banned from our Ngram
 
 
 def main():
+    """
+    Main function to compute Ngrams from the summaries, outputting a pickle file"""
+
     df_summaries = pd.read_csv(SUMMARIES_PATH)
     # renaming columns
     df_summaries.columns = ["ID", "Summary", "Date"]

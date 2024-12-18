@@ -12,6 +12,9 @@ GROUPBY = [None, "year", "decade", "period"][0]
 OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv" if GROUPBY else f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf.csv"
 
 def main():
+    """
+    take movie plots, and group them by year, decade or period, extract Ngrams rank them using TF-IDF scores, outputting a csv file"""
+
     perform_groupby = True if GROUPBY else False
     movies_ids, movie_plots_df = movies_groupby_and_plots(DATASET_PATH, GROUPBY, perform_groupby=perform_groupby)
 
