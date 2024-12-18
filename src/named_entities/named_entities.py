@@ -12,8 +12,11 @@ CSV_OUTPUT_PATH = "named_entities/named_entities.csv"
 
 
 def main():
+    """
+    Main function to extract named entities from all the gz files, outputting a csv file"""
 
     gz_files = inputs()
+
     # extracting named entities from all the gz files
     with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
         results = list(
@@ -28,6 +31,8 @@ def main():
 
 
 def inputs():
+    """inputs
+    returns all the .gz files' paths"""
 
     gz_files = []
     # getting all the .gz files' paths

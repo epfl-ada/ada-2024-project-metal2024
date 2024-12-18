@@ -16,6 +16,9 @@ NGRAM_PATH = f"src/ngrams/results/morethan100MB/{N}gram_results.pkl"
 OUTPUT_PATH = f"src/ngrams/results/{N}grams_per_{GROUPBY}.csv"
 
 def main():
+    """
+    take ngrams from the pkl made by ngrams.py and group them by year, decade or period, outputting a csv file"""
+
     movies_ids, ngrams = inputs()
 
     # converting ngrams to dict for faster access

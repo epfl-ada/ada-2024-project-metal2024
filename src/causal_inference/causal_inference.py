@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 sys.path.append(".")
-from src.utils import movies_groupby_and_plots, constants, correct_locations
+from src.utils import movies_groupby_and_plots, constants, correct_locations, correct_money
 import statsmodels.formula.api as smf
 import numpy as np
 import networkx as nx
@@ -10,29 +10,30 @@ import matplotlib.pyplot as plt
 import ast
 import matplotlib.cm as cm
 import re
+import time
 
 DATASET_PATH = constants.DATASET_PATH.value
 NAMED_ENTITIES_PATH = constants.NAMED_ENTITIES_PATH.value
 TF_IDF_NGRAMS_PATH = constants.NGRAMS_RESULTS_PATH.value + "1-3grams_tfidf.csv"
 # two periods to compare
 # the periods are the keys of the dictionary in src/utils.py
-PERIOD0 = "The Great Depression (1929-1939)"
-PERIOD1 = "The Cold War and McCarthyism (1947-1991)"
+PERIOD0 = "World War II (1939-1945)"
+PERIOD1 = "The Civil Rights Movement (1960-1970)"
 # column for named_entities/named_entities.csv to compare
-COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT", "TF-IDF_NGRAMS"][-1]
+COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT", "TF-IDF_NGRAMS"][2]
 # dictionnary mapping the named entities to a preprocessing function if needed
-NAMED_ENTITIES_PREPROCESSING = {"LOCATION": correct_locations}
+NAMED_ENTITIES_PREPROCESSING = {"LOCATION": correct_locations, "MONEY": correct_money}
 # the number of genres to keep for the logistic regression for the propensity score
 # the more genres, the more accurate the results
-TOP_N_GENRES = 30
+TOP_N_GENRES = 30 #30
 # be careful, the more samples, the longer the computation
 # but the more accurate the results
 # nx max_weight_matching is O(n^3)
-SAMPLES = 200
+SAMPLES = 1400 #1400
 
 def main():
     
-    #locations(df_named_entities, PERIOD0, PERIOD1)
+    # getting the movies 
     df_movies, _ = movies_groupby_and_plots(DATASET_PATH, "period")
 
     df_movies = df_movies.set_index("Movie release date")
@@ -43,12 +44,15 @@ def main():
     # converting the period to 1 or 0
     df_movies["period"] = df_movies["period"].apply(lambda x: 1 if x == PERIOD1 else 0)
     
-
+    # getting the propensity score
     df_propensity_score= logistic_regression(df_movies)
     df_propensity_score = df_propensity_score.sample(SAMPLES)
 
+    stopwatch = time.time()
     matchings = propensity_score_matching(df_propensity_score)
+    print(f"Time to compute the matching with {SAMPLES} samples: {time.time() - stopwatch:.2f} seconds")
 
+    # getting the matchings
     matchings_period0 = [i[0] for i in matchings]
     matchings_period1 = [i[1] for i in matchings]
 
@@ -61,9 +65,6 @@ def main():
     df_matched_period0 = df_compared.loc[df_compared["ID"].isin(matchings_period0)]
     df_matched_period1 = df_compared.loc[df_compared["ID"].isin(matchings_period1)]
 
-    #df_matched = pd.concat([df_matched_period0, df_matched_period1])
-    #df_matched.to_csv("src/causal_inference/matched.csv", index=False)
-
     tf_idf = True if COMPARED == "TF-IDF_NGRAMS" else False
     df_matched_period0, df_matched_period1 = preprocessing(df_matched_period0, df_matched_period1, tf_idf=tf_idf)
 
@@ -71,12 +72,14 @@ def main():
 
 
 def preprocessing(df_matched_period0, df_matched_period1, tf_idf = False) -> tuple[pd.Series, pd.Series]:
+    """converts strings to lists and preprocesses the data, returns value counts"""
 
     def evaluate_col(col) -> pd.Series:
         res = []
         for items in col:
             try:
                 if tf_idf: 
+                    # we have to use re to extract the words from the string
                     words = re.findall(r"'([^']*)'", items)
                     res.extend(words)
                 else: res.extend(ast.literal_eval(items))
@@ -86,6 +89,7 @@ def preprocessing(df_matched_period0, df_matched_period1, tf_idf = False) -> tup
 
         return pd.Series(res)
     
+    # preprocessing function
     preprocessing_function = NAMED_ENTITIES_PREPROCESSING.get(COMPARED, lambda x: x)
         
     location_period0 = preprocessing_function(evaluate_col(df_matched_period0[COMPARED])).value_counts()
@@ -94,13 +98,15 @@ def preprocessing(df_matched_period0, df_matched_period1, tf_idf = False) -> tup
     return location_period0, location_period1
 
 
-def plots(df_matched_period0: pd.Series, df_matched_period1: pd.Series, top_n=15):
+def plots(df_matched_period0: pd.Series, df_matched_period1: pd.Series, top_n=25):
+    """plots the data"""
 
-    _, ax = plt.subplots(2, 1, figsize=(10, 10))
+    _, ax = plt.subplots(2, 1, figsize=(14, 5))
     # make the color vary with the value
-    df_matched_period0.head(top_n).plot(kind="bar", ax=ax[0], title=f"Top {top_n} {COMPARED} in {PERIOD0} for {df_matched_period0.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period0.values/df_matched_period0.values.max()))
-    df_matched_period1.head(top_n).plot(kind="bar", ax=ax[1], title=f"Top {top_n} {COMPARED} in {PERIOD1} for {df_matched_period1.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period1.values/df_matched_period1.values.max()))
+    df_matched_period0.head(top_n).plot(kind="bar", ax=ax[0], title=f"Top {top_n} {COMPARED} in {PERIOD0} for {df_matched_period0.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period0.values/df_matched_period0.values.max()), ylabel="Count", logy=False)
+    df_matched_period1.head(top_n).plot(kind="bar", ax=ax[1], title=f"Top {top_n} {COMPARED} in {PERIOD1} for {df_matched_period1.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period1.values/df_matched_period1.values.max()), ylabel="Count", logy=False)
     plt.tight_layout()
+    plt.savefig(f"src/causal_inference/results/{COMPARED}.svg")
     plt.show()
 
 
@@ -146,13 +152,13 @@ def logistic_regression(df: pd.DataFrame) -> pd.DataFrame:
     # one hot encoding
     df = pd.get_dummies(df, columns=["Movie_genres"], drop_first=True, dtype=int)
 
-
     # remove spaces frmo column names
     df.columns = df.columns.str.replace(" ", "_").str.replace("'", '').str.replace(" - ", "_").str.replace("and", "_").str.replace("/", "_").str.replace("-", "_")
 
     # drop rows with missing values
     df = df.dropna()
 
+    # drop the movie name, we don't need it, too many unique values
     df = df.drop(columns=["Movie_name"])
 
     col_names = [f"C({col})" for col in df.columns if "Movie_genres" in col]

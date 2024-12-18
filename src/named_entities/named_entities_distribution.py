@@ -16,6 +16,10 @@ OUTPUT_PATH = f"src/named_entities/results/named_entities_per_{GROUPBY}.csv"
 
 
 def main():
+    """
+    take named entities from the csv made by named_identities.py and group them by year, decade or period, outputting a csv file"""
+
+
     movies_ids, named_entities_df = inputs()
 
     # creating a map to get the date of a movie by its ID
