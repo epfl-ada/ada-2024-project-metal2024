@@ -93,11 +93,12 @@ custom_colors = [
     "#00ced1",  # Dark Turquoise
 ]
 
+
 def plot_theme_over_years(theme_years_counts_pivot, themes, theme_colors):
-    # Plotly Interactive Plot
+    # Create an empty figure for the interactive plot
     fig = go.Figure()
 
-    # Add each theme as a trace in Plotly
+    # Add each theme as a trace
     for theme in themes:
         if theme in theme_years_counts_pivot.columns:
             fig.add_trace(go.Scatter(
@@ -164,7 +165,7 @@ def plot_theme_over_years(theme_years_counts_pivot, themes, theme_colors):
         yanchor="middle",
     )
 
-    # Update layout
+    # Update layout for the interactive plot
     fig.update_layout(
         updatemenus=[dropdown_menu, side_button],
         title={
@@ -181,17 +182,13 @@ def plot_theme_over_years(theme_years_counts_pivot, themes, theme_colors):
         width=1000,
     )
 
-    # Show the interactive plot
-    fig.show()
+    # Save the interactive plot as an HTML file
+    fig.write_html('interactive_theme_periods_plot.html')
 
-    # Save the interactive plot as HTML
-    fig.write_html('/Users/lilly-flore/Desktop/line_theme_year.html')
+    # Create the static plot
+    _, ax = plt.subplots(figsize=(12, 6))
 
-
-    # Matplotlib Static Plot
-    fig, ax = plt.subplots(figsize=(12, 6))
-
-    # Add each theme as a line
+    # Add each theme as a line on the static plot
     for theme in themes:
         if theme in theme_years_counts_pivot.columns:
             ax.plot(
@@ -201,20 +198,19 @@ def plot_theme_over_years(theme_years_counts_pivot, themes, theme_colors):
                 color=theme_colors.get(theme, 'gray')  # Theme color
             )
 
-    # Add a title and axis labels
+    # Add a title and axis labels for the static plot
     ax.set_title('Evolution of Movie Themes Over the Years', fontsize=14)
     ax.set_xlabel('Release Year', fontsize=12)
     ax.set_ylabel('Number of Movies', fontsize=12)
 
-    # Add a legend
+    # Add a legend for the static plot
     ax.legend(title="Themes", bbox_to_anchor=(1.05, 1), loc='upper left')
 
     # Adjust margins to properly display the legend
     plt.tight_layout()
 
-    # Display the static plot
+    # Show the static plot
     plt.show()
-
 
 def plot_top3(theme_years_counts_pivot, themes, theme_colors, output_path_interactive, title):
     # 1. Create an interactive plot with Plotly
@@ -256,7 +252,7 @@ def plot_top3(theme_years_counts_pivot, themes, theme_colors, output_path_intera
     fig_interactive.write_html(output_path_interactive)
 
     # 2. Create a static plot with Matplotlib
-    fig_static, ax = plt.subplots(figsize=(12, 6))
+    _, ax = plt.subplots(figsize=(12, 6))
 
     for theme in themes:
         if theme in theme_years_counts_pivot.columns:
@@ -279,81 +275,125 @@ def plot_top3(theme_years_counts_pivot, themes, theme_colors, output_path_intera
     # Adjust margins to display the legend correctly
     plt.tight_layout()
 
-    # Return both figures (interactive and static)
-    return fig_static
 
-
-def plot_theme_over_years_static(theme_years_counts_pivot, themes, theme_colors):
-    """
-    Function to plot the evolution of movie themes over the years.
-
-    Parameters:
-    - theme_years_counts_pivot (pd.DataFrame): DataFrame with years as index and themes as columns, containing movie counts.
-    - themes (list): List of themes to plot.
-    - theme_colors (dict): Dictionary mapping themes to colors.
-    """
-    # Create a figure and axes
-    fig, ax = plt.subplots(figsize=(12, 6))
-
-    # Add each theme as a line
-    for theme in themes:
-        if theme in theme_years_counts_pivot.columns:
-            ax.plot(
-                theme_years_counts_pivot.index,  # Years on the x-axis
-                theme_years_counts_pivot[theme],  # Number of movies on the y-axis
-                label=theme,  # Theme name for the legend
-                color=theme_colors.get(theme, 'gray')  # Theme color
-            )
-
-    # Add a title and axis labels
-    ax.set_title('Evolution of Movie Themes Over the Years', fontsize=14)
-    ax.set_xlabel('Release Year', fontsize=12)
-    ax.set_ylabel('Number of Movies', fontsize=12)
-
-    # Add a legend
-    ax.legend(title="Themes", bbox_to_anchor=(1.05, 1), loc='upper left')
-
-    # Adjust margins to properly display the legend
-    plt.tight_layout()
-
-    # Display the plot
-    plt.show()
-
-
-# Function to create a plot for selected themes
-def create_theme_plot(theme_years_counts_pivot, theme_colors, themes, title):
+def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_colors):
+    # Create an empty figure for the interactive plot
     fig = go.Figure()
 
+    # Add each theme as a trace
     for theme in themes:
-        if theme in theme_years_counts_pivot.columns:
-            # Get genres associated with the theme
-            associated_genres = theme_mapping.get(theme, [])
-            if len(associated_genres) > 5:
-                genres_text = ', '.join(associated_genres[:5]) + ', ...'  # Truncate and add ellipsis
-            else:
-                genres_text = ', '.join(associated_genres)
-            
+        if theme in normalized_theme_periods_counts.columns:
             fig.add_trace(go.Scatter(
-                x=theme_years_counts_pivot.index,
-                y=theme_years_counts_pivot[theme],
-                mode='lines',
-                name=theme,
-                line=dict(color=theme_colors.get(theme, 'gray')),
-                hovertemplate=f'<b>Genres:</b> {genres_text}<br>'
-                              f'<b>Year:</b> %{{x}}<br><b>Number of Movies:</b> %{{y}}<br>'
+                x=normalized_theme_periods_counts.index,  # x-axis is the release year
+                y=normalized_theme_periods_counts[theme],  # y-axis is the number of movies for each theme
+                mode='lines',  # Use lines for the plot
+                name=theme,  # Set the theme name for the legend
+                line=dict(color=theme_colors.get(theme, 'gray')),  # Use color mapping for each theme
+                hovertemplate='Year: %{x}<br>Number of Movies: %{y}<br>'  # Custom hover text
             ))
 
+    # Add buttons for hide/show functionality
+    visibility = [[True if i == idx else False for i in range(len(themes))]
+                  for idx in range(len(themes))]
+
+    # Define "Select Theme" button
+    select_theme_button = dict(
+        label="Select Theme",  # Displayed as a label in the dropdown
+        method=None,  # Non-interactive option
+        args=[]  # No action associated with this
+    )
+
+    theme_buttons = [
+        dict(
+            label=theme,
+            method="update",
+            args=[
+                {"visible": vis},  # Update visibility
+                {"title": f"Evolution of {theme} Movies Over the Periods"}  # Update title
+            ]
+        )
+        for theme, vis in zip(themes, visibility)
+    ]
+
+    # Combine "Select Theme" and theme-specific buttons
+    buttons = [select_theme_button] + theme_buttons
+
+    # Dropdown menu for individual themes
+    dropdown_menu = dict(
+        type="dropdown",
+        buttons=buttons,
+        x=1.214,
+        xanchor="center",
+        y=1.2,
+        yanchor="top",
+    )
+
+    # Button for "Show All" placed on the side
+    side_button = dict(
+        type="buttons",
+        buttons=[
+            dict(
+                label="Show All",
+                method="update",
+                args=[
+                    {"visible": [True] * len(themes)},
+                    {"title": "Evolution of Movie Themes Over the Periods"}
+                ]
+            )
+        ],
+        x=1.005,  # Adjust position to place on the side
+        xanchor="left",
+        y=1.3,
+        yanchor="middle",
+    )
+
+    # Update layout for the interactive plot
     fig.update_layout(
+        updatemenus=[dropdown_menu, side_button],
         title={
-            'text': title,
-            'x': 0.5,
-            'xanchor': 'center'
+            'text': 'Evolution of Movie Themes Over the Periods',
+            'x': 0.5,  # Center the title
+            'xanchor': 'right'
         },
+        title_x=0.5,
+        barmode='stack',
         xaxis_title='Release Year',
         yaxis_title='Number of Movies',
         legend_title="Themes",
-        height=400,
-        width=600,
+        height=500,
+        width=1000,
     )
 
-    return fig
+    # Save the interactive plot as an HTML file
+    fig.write_html('/Users/lilly-flore/Desktop/interactive_theme_periods_plot.html')
+
+    # Create the static plot
+    _, ax = plt.subplots(figsize=(12, 8))
+
+    # Plot each theme as a line on the static plot
+    for theme in normalized_theme_periods_counts.columns:
+        ax.plot(
+            normalized_theme_periods_counts.index,  # Periods on the x-axis
+            normalized_theme_periods_counts[theme],  # Normalized counts on the y-axis
+            label=theme,  # Theme name for the legend
+            color=theme_colors.get(theme, 'gray')  # Theme color
+        )
+
+    # Add title and labels for the static plot
+    ax.set_title("Normalized Theme Counts Across Periods", fontsize=14)
+    ax.set_xlabel('Periods', fontsize=12)
+    ax.set_ylabel('Percentage (%)', fontsize=12)
+
+    # Format y-axis as percentage
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x*100:.0f}%'))
+
+    # Add a legend for the static plot
+    ax.legend(title="Themes", bbox_to_anchor=(1.05, 1), loc='upper left')
+
+    plt.xticks(rotation=80)
+
+    # Adjust layout to display the legend properly
+    plt.tight_layout()
+
+    # Show the static plot
+    plt.show()
