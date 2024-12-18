@@ -8,15 +8,18 @@ import networkx as nx
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import ast
+import matplotlib.cm as cm
+import re
 
 DATASET_PATH = constants.DATASET_PATH.value
 NAMED_ENTITIES_PATH = constants.NAMED_ENTITIES_PATH.value
+TF_IDF_NGRAMS_PATH = constants.NGRAMS_RESULTS_PATH.value + "1-3grams_tfidf.csv"
 # two periods to compare
 # the periods are the keys of the dictionary in src/utils.py
 PERIOD0 = "The Great Depression (1929-1939)"
 PERIOD1 = "The Cold War and McCarthyism (1947-1991)"
 # column for named_entities/named_entities.csv to compare
-COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT"][2]
+COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT", "TF-IDF_NGRAMS"][-1]
 # dictionnary mapping the named entities to a preprocessing function if needed
 NAMED_ENTITIES_PREPROCESSING = {"LOCATION": correct_locations}
 # the number of genres to keep for the logistic regression for the propensity score
@@ -49,36 +52,54 @@ def main():
     matchings_period0 = [i[0] for i in matchings]
     matchings_period1 = [i[1] for i in matchings]
 
-    df_named_entities = pd.read_csv(NAMED_ENTITIES_PATH)
+    if COMPARED == "TF-IDF_NGRAMS":
+        df_compared = pd.read_csv(TF_IDF_NGRAMS_PATH)
+        df_compared = df_compared.rename(columns={"Wikipedia movie ID": "ID", "Ngrams and score": COMPARED})
+    else:
+        df_compared = pd.read_csv(NAMED_ENTITIES_PATH)
 
-    df_matched_period0 = df_named_entities.loc[df_named_entities["ID"].isin(matchings_period0)]
-    df_matched_period1 = df_named_entities.loc[df_named_entities["ID"].isin(matchings_period1)]
+    df_matched_period0 = df_compared.loc[df_compared["ID"].isin(matchings_period0)]
+    df_matched_period1 = df_compared.loc[df_compared["ID"].isin(matchings_period1)]
 
     #df_matched = pd.concat([df_matched_period0, df_matched_period1])
     #df_matched.to_csv("src/causal_inference/matched.csv", index=False)
 
+    tf_idf = True if COMPARED == "TF-IDF_NGRAMS" else False
+    df_matched_period0, df_matched_period1 = preprocessing(df_matched_period0, df_matched_period1, tf_idf=tf_idf)
+
     plots(df_matched_period0, df_matched_period1)
 
-def plots(df_matched_period0, df_matched_period1, top_n = 15):
+
+def preprocessing(df_matched_period0, df_matched_period1, tf_idf = False) -> tuple[pd.Series, pd.Series]:
 
     def evaluate_col(col) -> pd.Series:
         res = []
         for items in col:
             try:
-                res.extend(ast.literal_eval(items))
+                if tf_idf: 
+                    words = re.findall(r"'([^']*)'", items)
+                    res.extend(words)
+                else: res.extend(ast.literal_eval(items))
             except:
                 continue
+
 
         return pd.Series(res)
     
     preprocessing_function = NAMED_ENTITIES_PREPROCESSING.get(COMPARED, lambda x: x)
         
-    location_period0 = preprocessing_function(evaluate_col(df_matched_period0[COMPARED])).value_counts().head(top_n)
-    location_period1 = preprocessing_function(evaluate_col(df_matched_period1[COMPARED])).value_counts().head(top_n)
+    location_period0 = preprocessing_function(evaluate_col(df_matched_period0[COMPARED])).value_counts()
+    location_period1 = preprocessing_function(evaluate_col(df_matched_period1[COMPARED])).value_counts()
 
-    fig, ax = plt.subplots(2, 1, figsize=(10, 10))
-    location_period0.plot(kind="bar", ax=ax[0], title=f"Top {top_n} {COMPARED} in {PERIOD0} for {df_matched_period0.shape[0]} movies")
-    location_period1.plot(kind="bar", ax=ax[1], title=f"Top {top_n} {COMPARED} in {PERIOD1} for {df_matched_period1.shape[0]} movies")
+    return location_period0, location_period1
+
+
+def plots(df_matched_period0: pd.Series, df_matched_period1: pd.Series, top_n=15):
+
+    _, ax = plt.subplots(2, 1, figsize=(10, 10))
+    # make the color vary with the value
+    df_matched_period0.head(top_n).plot(kind="bar", ax=ax[0], title=f"Top {top_n} {COMPARED} in {PERIOD0} for {df_matched_period0.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period0.values/df_matched_period0.values.max()))
+    df_matched_period1.head(top_n).plot(kind="bar", ax=ax[1], title=f"Top {top_n} {COMPARED} in {PERIOD1} for {df_matched_period1.shape[0]} movies", rot=45, color= cm.viridis(df_matched_period1.values/df_matched_period1.values.max()))
     plt.tight_layout()
     plt.show()
 
@@ -92,7 +113,7 @@ def logistic_regression(df: pd.DataFrame) -> pd.DataFrame:
     def standardize(series: pd.Series) -> pd.Series:
         return (series - series.mean())/series.std()
 
-    rows_to_standardize = ["averageRating", "numVotes", ]
+    rows_to_standardize = ["averageRating", "numVotes"]
     
     for row in rows_to_standardize:
         df[row] = standardize(df[row])

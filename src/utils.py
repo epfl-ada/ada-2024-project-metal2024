@@ -3,6 +3,7 @@ from enum import Enum
 class constants(Enum):
     DATASET_PATH = "data/"
     NAMED_ENTITIES_PATH = "src/named_entities/named_entities.csv"
+    NGRAMS_RESULTS_PATH = "src/ngrams/results/"
 
 
 periods_map = {
@@ -37,6 +38,7 @@ def movies_groupby_and_plots(DATASET_PATH, GROUPBY, perform_groupby = False):
     """
     Returns: movies_ids and ngrams
     """
+
     movies_df = pd.read_csv(os.path.join(DATASET_PATH,"processed_movies.csv"))
 
     movie_plots_df = pd.read_csv(os.path.join(DATASET_PATH, "processed_plot_summaries.csv"))

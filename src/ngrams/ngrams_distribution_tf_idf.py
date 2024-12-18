@@ -8,16 +8,19 @@ from src.utils import movies_groupby_and_plots, constants
 TOP_N = 20 # TOP N ngram per year or decade
 NGRAM_RANGE = (1,3)
 DATASET_PATH = constants.DATASET_PATH.value
-GROUPBY = ["year", "decade", "period"][1]
-OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv"
+GROUPBY = [None, "year", "decade", "period"][0]
+OUTPUT_PATH = f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf_per_{GROUPBY}.csv" if GROUPBY else f"src/ngrams/results/{NGRAM_RANGE[0]}-{NGRAM_RANGE[1]}grams_tfidf.csv"
 
 def main():
-    movies_ids, movie_plots_df = movies_groupby_and_plots(DATASET_PATH, GROUPBY)
+    perform_groupby = True if GROUPBY else False
+    movies_ids, movie_plots_df = movies_groupby_and_plots(DATASET_PATH, GROUPBY, perform_groupby=perform_groupby)
 
     # count the ngrams for each grouped column
     movies_ids["Ngrams and score"] = movies_ids["Wikipedia movie ID"].apply(lambda x: tfidf_ranking(x, NGRAM_RANGE, TOP_N, movie_plots_df))
     # save the results
-    movies_ids[["Movie release date", "Number of movies", "Ngrams and score"]].to_csv(OUTPUT_PATH, index=False)
+
+    if not GROUPBY: movies_ids.set_index("Wikipedia movie ID")["Ngrams and score"].to_csv(OUTPUT_PATH, index=True)
+    else: movies_ids[["Movie release date", "Number of movies", "Ngrams and score"]].to_csv(OUTPUT_PATH, index=False)
 
 
 
@@ -26,13 +29,18 @@ def tfidf_ranking(ids: list, ngram_range, top_n, movie_plots_df):
 
     documents = []
     # get the documents' summaries
-    for id in ids:
-        try:
-            documents.append(
-                movie_plots_df.get(id)
-            )
-        except:
-            continue
+    try:
+        for id in ids:
+            try:
+                documents.append(
+                    movie_plots_df.get(id)
+                )
+            except:
+                continue
+    except:
+        documents.append(
+            movie_plots_df.get(ids)
+        )
     # remove empty summaries
     documents = [doc for doc in documents if doc]
     # if there are no documents then return pd.NA
