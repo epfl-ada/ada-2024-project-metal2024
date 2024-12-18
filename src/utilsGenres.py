@@ -1,6 +1,7 @@
 from utils import *
-import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import seaborn as sns
 
 
 def map_year_to_periods(year, periods):
@@ -183,7 +184,7 @@ def plot_theme_over_years(theme_years_counts_pivot, themes, theme_colors):
     )
 
     # Save the interactive plot as an HTML file
-    fig.write_html('interactive_theme_periods_plot.html')
+    fig.write_html('/Users/lilly-flore/Desktop/line_theme_years_plot.html')
 
     # Create the static plot
     _, ax = plt.subplots(figsize=(12, 6))
@@ -324,7 +325,7 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
         buttons=buttons,
         x=1.214,
         xanchor="center",
-        y=1.2,
+        y=1.12,
         yanchor="top",
     )
 
@@ -343,7 +344,7 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
         ],
         x=1.005,  # Adjust position to place on the side
         xanchor="left",
-        y=1.3,
+        y=1.185,
         yanchor="middle",
     )
 
@@ -360,12 +361,12 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
         xaxis_title='Release Year',
         yaxis_title='Number of Movies',
         legend_title="Themes",
-        height=500,
+        height=600,
         width=1000,
     )
 
     # Save the interactive plot as an HTML file
-    fig.write_html('/Users/lilly-flore/Desktop/interactive_theme_periods_plot.html')
+    fig.write_html('/Users/lilly-flore/Desktop/line_theme_periods_plot.html')
 
     # Create the static plot
     _, ax = plt.subplots(figsize=(12, 8))
@@ -393,6 +394,202 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
     plt.xticks(rotation=80)
 
     # Adjust layout to display the legend properly
+    plt.tight_layout()
+
+    # Show the static plot
+    plt.show()
+
+
+def plot_bar_theme_periods(normalized_theme_periods_counts, theme_colors):
+    """
+    Generates an interactive Plotly bar chart and a static Matplotlib bar chart 
+    to visualize the evolution of movie themes over periods.
+    
+    Parameters:
+    - normalized_theme_periods_counts: DataFrame containing normalized theme counts per period.
+    - theme_colors: Dictionary mapping themes to their respective colors.
+    - output_path: Path to save the Plotly interactive plot as an HTML file.
+    """
+    themes = normalized_theme_periods_counts.columns.tolist()
+    periods = normalized_theme_periods_counts.index.tolist()
+    
+    # Create the interactive Plotly bar chart
+    fig = go.Figure()
+
+    # Add each theme as a trace
+    for theme in themes:
+        fig.add_trace(go.Bar(
+            x=periods,
+            y=normalized_theme_periods_counts[theme],
+            name=theme,
+            marker_color=theme_colors.get(theme, 'gray'),
+            hovertemplate='Period: %{x}<br>' + 'Theme proportion: %{y}<br>',
+        ))
+    
+    # Configure dropdown menu for individual themes
+    visibility = [[True if i == idx else False for i in range(len(themes))]
+                  for idx in range(len(themes))]
+
+    theme_buttons = [
+        dict(
+            label=theme,
+            method="update",
+            args=[
+                {"visible": vis},  # Update visibility
+                {"title": f"Evolution of {theme} Movies Over the Periods"}  # Update title
+            ]
+        )
+        for theme, vis in zip(themes, visibility)
+    ]
+
+    dropdown_menu = dict(
+        type="dropdown",
+        buttons=[dict(label="Select Theme", method=None, args=[])] + theme_buttons,
+        x=1.214,
+        xanchor="center",
+        y=1.12,
+        yanchor="top",
+    )
+
+    # Add "Show All" button
+    side_button = dict(
+        type="buttons",
+        buttons=[
+            dict(
+                label="Show All",
+                method="update",
+                args=[
+                    {"visible": [True] * len(themes)},
+                    {"title": "Evolution of Movie Themes Over the Periods"}
+                ]
+            )
+        ],
+        x=1.005,
+        xanchor="left",
+        y=1.185,
+        yanchor="middle",
+    )
+
+    # Update Plotly layout
+    fig.update_layout(
+        updatemenus=[dropdown_menu, side_button],
+        title={
+            'text': 'Evolution of Movie Themes Over the Periods',
+            'x': 0.5,
+            'xanchor': 'right'
+        },
+        barmode='stack',
+        xaxis_title="Period",
+        yaxis_title="Proportion of Movies",
+        legend_title="Themes",
+        height=600,
+        width=1000,
+    )
+
+    # Save the interactive plot
+    fig.write_html('/Users/lilly-flore/Desktop/bar_theme_period.html')
+
+    # Create the static Matplotlib bar chart
+    _, ax = plt.subplots(figsize=(12, 8))
+
+    # Plot each theme as a bar
+    normalized_theme_periods_counts.plot(
+        kind='bar',
+        stacked=True,
+        ax=ax,
+        color=[theme_colors.get(theme, 'gray') for theme in themes]
+    )
+
+    # Add a title and labels
+    ax.set_title('Evolution of Movie Themes Over the Periods', fontsize=14)
+    ax.set_xlabel('Periods', fontsize=12)
+    ax.set_ylabel('Proportion of Movies', fontsize=12)
+
+    # Rotate x-axis labels by 80 degrees
+    plt.xticks(rotation=80)
+
+    # Add a legend
+    ax.legend(title="Themes", bbox_to_anchor=(1.05, 1), loc='upper left')
+
+    # Adjust layout to make space for the legend
+    plt.tight_layout()
+
+    # Show the static plot
+    plt.show()
+
+def plot_correlation_matrix(normalized_theme_periods_counts):
+    """
+    Generates both an interactive Plotly heatmap and a static Seaborn heatmap to 
+    visualize the correlation matrix between periods.
+
+    Parameters:
+    - normalized_theme_periods_counts: DataFrame of normalized theme counts for periods.
+    - output_path: Path to save the Plotly interactive heatmap as an HTML file.
+    """
+    # Transpose the data for correlation calculation
+    periods_themes = normalized_theme_periods_counts.T
+
+    # Calculate the correlation matrix
+    correlation_matrix = periods_themes.corr()
+
+    # Generate hover text for interactive heatmap
+    hover_text = []
+    for i in range(len(correlation_matrix)):
+        hover_row = []
+        for j in range(len(correlation_matrix.columns)):
+            top_themes = periods_themes.iloc[:, i].sort_values(ascending=False).index[:3]
+            hover_row.append(f"Top 3 themes: {', '.join(top_themes)}")
+        hover_text.append(hover_row)
+
+    # Interactive Plotly heatmap
+    fig = go.Figure(data=go.Heatmap(
+        z=correlation_matrix.values,
+        x=correlation_matrix.columns,
+        y=correlation_matrix.index,
+        colorscale='Viridis',
+        text=hover_text,
+        hoverinfo='text',
+        colorbar=dict(title="Correlation")
+    ))
+
+    fig.update_layout(
+        title={
+            'text': "Interactive Correlation Matrix Between Periods",
+            'x': 0.5,
+            'xanchor': 'center'
+        },
+        height=800,
+        width=1000,
+        xaxis_tickangle=45
+    )
+
+    # Save and show interactive plot
+    fig.write_html('/Users/lilly-flore/Desktop/period_corr_matrix.html')
+
+    # Static Seaborn heatmap
+    _, ax = plt.subplots(figsize=(12, 10))
+    sns.heatmap(
+        correlation_matrix,
+        annot=True,  # Annotate cells with the correlation value
+        fmt=".2f",  # Display correlation value with 2 decimals
+        cmap='viridis_r',
+        cbar_kws={'label': 'Correlation'},
+        xticklabels=correlation_matrix.columns,
+        yticklabels=correlation_matrix.index,
+        ax=ax,
+        annot_kws={'size': 10},  # Adjust font size for annotations
+        square=True  # Keep the heatmap square
+    )
+
+    # Rotate x-axis labels for better readability
+    plt.xticks(rotation=270)
+
+    # Set the title and labels
+    ax.set_title('Correlation Matrix Between Periods', fontsize=16)
+    ax.set_xlabel('Periods', fontsize=12)
+    ax.set_ylabel('Periods', fontsize=12)
+
+    # Adjust layout to fit the labels and title
     plt.tight_layout()
 
     # Show the static plot
