@@ -5,19 +5,29 @@ class constants(Enum):
     NAMED_ENTITIES_PATH = "src/named_entities/named_entities.csv"
     NGRAMS_RESULTS_PATH = "src/ngrams/results/"
 
-
-periods_map = {
-    "The Belle Époque (1900-1914)": list(range(1900,1914 +1)),
-    "World War I (1914-1918)": list(range(1914,1918 +1)),
-    "The Roaring Twenties (1920-1929)": list(range(1920,1929 +1)),
-    "The Great Depression (1929-1939)": list(range(1929,1939 +1)),
-    "World War II (1939-1945)": list(range(1939,1946 +1)),
-    "The Cold War and McCarthyism (1947-1991)": list(range(1947,1991 +1)),
-    "The Civil Rights and Social Equality Struggles (1950s-1970s)": list(range(1950,1970 +1)),
-    "The Reagan Years and the Rise of Neoliberalism (1980s)": list(range(1980,1989 +1)),
-    "The Post-Cold War and the New World Order (1991-2001)": list(range(1991,2001 +1)),
-    "The 9/11 Attacks and the War on Terrorism (2001-present)": list(range(2001,2024 +1)),
+periods_map_ = { 
+    "The Belle Époque (1900-1914)": {"start_year": 1900, "end_year": 1913}, 
+    "World War I (1914-1918)": {"start_year": 1914, "end_year": 1919}, 
+    "The Roaring Twenties (1920-1929)": {"start_year": 1920, "end_year": 1928}, 
+    "The Great Depression (1929-1939)": {"start_year": 1929, "end_year": 1939}, 
+    "World War II (1939-1945)": {"start_year": 1940, "end_year": 1945}, 
+    "Early Cold War (1946-1960)": {"start_year": 1946, "end_year": 1960}, 
+    "The Civil Rights Movement (1960-1970)": {"start_year": 1961, "end_year": 1970}, 
+    "Late Cold War (1971-1991)": {"start_year": 1971, "end_year": 1991}, 
+    "Post-Cold War and the New World Order (1992-2001)": {"start_year": 1992, "end_year": 2000}, 
+    "War on Terrorism (2001-present)": {"start_year": 2001, "end_year": 2024}, 
 }
+
+def make_periods_map(periods_map: dict):
+    """converting periods map to list with every year in it"""
+    for key, item in periods_map:
+        periods_map[key] = list(range(
+            start = item["start_year"],
+            stop = item["end_year"] + 1
+        ))
+    return periods_map
+
+periods_map = make_periods_map(periods_map_)
 
 # !!! each year currently can have only one period and not multiple
 def inverse_dict():

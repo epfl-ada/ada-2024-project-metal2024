@@ -201,6 +201,7 @@ def propensity_score_matching(df: pd.DataFrame) -> pd.DataFrame:
 
 
     # Generate and return the maximum weight matching on the generated graph
+    print("Computing the maximum weight matching, could take some time...")
     return nx.max_weight_matching(G, maxcardinality=True)
     
 
