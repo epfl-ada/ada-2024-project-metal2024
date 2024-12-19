@@ -32,6 +32,9 @@ TOP_N_GENRES = 30 #30
 SAMPLES = 1400 #1400
 
 def main():
+    """
+    performs the causal inference (propensity score matching) to compare the named entities or TF-IDF_NGRAMS between two periods
+    as explained in the causal inference part of the website https://apanoush.github.io/ada-METAL-website/report"""
     
     # getting the movies 
     df_movies, _ = movies_groupby_and_plots(DATASET_PATH, "period")
