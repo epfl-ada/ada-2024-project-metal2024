@@ -394,10 +394,10 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
     # Add title and labels for the static plot
     ax.set_title("Normalized Theme Counts Across Periods", fontsize=14)
     ax.set_xlabel('Periods', fontsize=12)
-    ax.set_ylabel('Percentage (%)', fontsize=12)
+    ax.set_ylabel('Evolution of the Proprotion of Themes ', fontsize=12)
 
     # Format y-axis as percentage
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x*100:.0f}%'))
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.0f}'))
 
     # Add a legend for the static plot
     ax.legend(title="Themes", bbox_to_anchor=(1.05, 1), loc='upper left')
