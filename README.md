@@ -28,7 +28,7 @@ Our datastory follows the following order:
 7. **The Civil Rights Movement (1961-1970)**  
 8. **The Late Cold War (1971-1991)**  
 9. **The Post-Cold War and the New World Order (1992-2001)** 
-10. **War on terror (2001)** 
+10. **War on terror (2001-present)** 
 ### Research Questions 
 
 1. How genres emerged through the years and defined periods ? Can we see some known events appear from this analyis
