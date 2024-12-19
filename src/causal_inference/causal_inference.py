@@ -17,10 +17,10 @@ NAMED_ENTITIES_PATH = constants.NAMED_ENTITIES_PATH.value
 TF_IDF_NGRAMS_PATH = constants.NGRAMS_RESULTS_PATH.value + "1-3grams_tfidf.csv"
 # two periods to compare
 # the periods are the keys of the dictionary in src/utils.py
-PERIOD0 = "World War II (1939-1945)"
+PERIOD0 = "The Great Depression (1929-1939)"
 PERIOD1 = "The Civil Rights Movement (1960-1970)"
 # column for named_entities/named_entities.csv to compare
-COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT", "TF-IDF_NGRAMS"][2]
+COMPARED = ["DATE","PERSON","LOCATION","NUMBER","TIME","ORGANIZATION","MISC","DURATION","SET","ORDINAL","MONEY","PERCENT", "TF-IDF_NGRAMS"][5]
 # dictionnary mapping the named entities to a preprocessing function if needed
 NAMED_ENTITIES_PREPROCESSING = {"LOCATION": correct_locations, "MONEY": correct_money}
 # the number of genres to keep for the logistic regression for the propensity score
