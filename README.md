@@ -3,7 +3,7 @@
 
 ### Films — the mirror of a century ?
 
-This project analyze the transformation of film genres over time, analyzing how cultural, political, and economic shifts have influenced cinematic trends and how they are represented during these periods.
+This project analyzes the transformation of film genres over time, analyzing how cultural, political, and economic shifts have influenced cinematic trends and how they are represented during these periods.
 
 We will explore how significant global events, such as wars, economic depressions, or technological advancements, have driven changes in audience tastes and genre popularity. By examining patterns, we aim to understand how specific genres, like action-packed thrillers or heartfelt dramas, emerge and tells us how they relect the periods of the last century.
 
@@ -11,11 +11,13 @@ The website for our project can be consulted at: https://apanoush.github.io/ada-
 
 Our datastory follows the following order: 
 
-1. Introduction and periods selection and presentation
+1. Introduction & periods selection and presentation
 2. Genres analysis 
 3. Periods Wordcloud
 4. Causal inference
 5. Ratings analysis
+6. Conclusion
+7. Team
 
 ## Historical Periods
 
@@ -47,7 +49,7 @@ The whole data preprocessing pipeline can be found in src/datapreprocessing.
 
 ### Methods : Implementation of the research questions :
 
-To analyze the transformation of film genres over time, we employed standard data analysis tools and methodologies seen in class. The process began with with basic exploration of the raw data and it's missing values and later followed by preprocessing which removed incomlete data or completed it using the IMDB dataset, especially to add ratings information. Theme evolution and Rating analysis were mostly done using standard Data vizualization techniques and dynamic graphs for the website were generated using plotly. 
+To analyze the transformation of film genres over time, we employed standard data analysis tools and methodologies seen in class. The process began with basic exploration of the raw data and it's missing values and later followed by preprocessing which removed incomplete data or completed it using the IMDB dataset, especially to add ratings information. Theme evolution and Rating analysis were mostly done using standard Data vizualization techniques and dynamic graphs for the website were generated using plotly. 
 
 Text processing techniques, such as tokenization, stop-word removal, and lemmatization, were applied to film summaries to generate word clouds for each historical period, highlighting the dominant themes and keywords. For the causal inference analysis, we utilized statistical models to explore relationships between key variables derived from plots, deriving named entities such as Organization or Location.
 
