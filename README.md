@@ -1,7 +1,7 @@
 ## ADA Project for group METAL2024
 
 
-### Films the mirror of a century ?
+### Films — the mirror of a century ?
 
 This project analyze the transformation of film genres over time, analyzing how cultural, political, and economic shifts have influenced cinematic trends and how they are represented during these periods.
 

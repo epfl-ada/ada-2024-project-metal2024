@@ -370,7 +370,7 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
         title_x=0.5,
         barmode='stack',
         xaxis_title='Release Year',
-        yaxis_title='Number of Movies',
+        yaxis_title='Proportion of Movies',
         legend_title="Themes",
         height=600,
         width=1000,
