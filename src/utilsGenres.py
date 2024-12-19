@@ -594,7 +594,7 @@ def plot_correlation_matrix(normalized_theme_periods_counts):
     )
 
     # Rotate x-axis labels for better readability
-    plt.xticks(rotation=270)
+    plt.xticks(rotation=80)
 
     # Set the title and labels
     ax.set_title('Correlation Matrix Between Periods', fontsize=16)
