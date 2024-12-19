@@ -47,6 +47,10 @@ The whole data preprocessing pipeline can be found in src/datapreprocessing.
 
 ### Methods : Implementation of the research questions :
 
+To analyze the transformation of film genres over time, we employed standard data analysis tools and methodologies seen in class. The process began with with basic exploration of the raw data and it's missing values and later followed by preprocessing which removed incomlete data or completed it using the IMDB dataset, especially to add ratings information. Theme evolution and Rating analysis were mostly done using standard Data vizualization techniques and dynamic graphs for the website were generated using plotly. 
+
+Text processing techniques, such as tokenization, stop-word removal, and lemmatization, were applied to film summaries to generate word clouds for each historical period, highlighting the dominant themes and keywords. For the causal inference analysis, we utilized statistical models to explore relationships between key variables derived from plots, deriving named entities such as Organization or Location.
+
 ### Followed timeline  
 - 18.10 Start Data exploration and Preprocessing 
 - 1.11 Start P2 Deliverable Sections
@@ -66,12 +70,33 @@ The whole data preprocessing pipeline can be found in src/datapreprocessing.
 
 ### Project structure: 
 
+├── README.md  
+├── data (folder)  
+├── results.ipynb  
+├── src  
+│   ├── causal_inference (folder)  
+│   ├── named_entities (folder)  
+│   ├── ngrams (folder)  
+│   ├── datapreprocessing.ipynb  
+│   ├── utils.py  
+│   ├── utilsGenres.py  
+│   ├── utilsRatings.py  
+│   └── utilsWordcloud.py  
+├── tests  
+│   ├── All_Genres_Top_Periods.csv  
+│   ├── named_entities_tests.ipynb   
+│   ├── ngram_test.csv  
+│   ├── ngrams_tf_idf_tests.ipynb  
+│   ├── ngrams_viz.ipynb  
+│   ├── plot-LLM.ipynb  
+│   └── test.json  
+
+
 Where to find the work done: 
 - `results.ipynb` contains the plots and ideas we had when analyzing our dataset. 
 It follows the same order as the website and explains the website's ideas and how we got there in greater detail. 
-- `src/datapreprocessing.ipynb` contains the preprocessing steps done for the data to be used directly in `results.ipynb`
 - `./data/` contains the originial dataset, and the datasets resulting from the preprocessing steps
+- `src/datapreprocessing.ipynb` contains the preprocessing steps done for the data to be used directly in `results.ipynb`
 - `./tests/` contains multiple different tests done on plots processing including ngrams and named entities. 
-- `./src/` contains most of the code. `utils.py` and it's derivates `utilsGenres.py`, `utilsRatings.py` contain the code used for their respective parts.  
-Folders `causal_inference`, `named_entities` and `ngrams` contain the code needed for these parts.
-As they produce some files in their respective `results` folder, it was preferable to create subfolders. 
+- `./src/` contains most of the code. `utils.py` and it's derivates `utilsGenres.py`, `utilsRatings.py` and `utilsWordcloud.py ` contain the code used for their respective parts.  
+Src subfolders `causal_inference`, `named_entities` and `ngrams` contain the code and results needed for these parts as they produce some files in their respective `results` folder.
