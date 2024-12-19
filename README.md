@@ -17,6 +17,17 @@ Our datastory follows the following order:
 4. Causal inference
 5. Ratings analysis
 
+## Historical Periods
+
+1. **The Progressive Era (1900-1914)**  
+2. **World War I (1914-1918)**  
+3. **The Roaring Twenties (1920-1929)**  
+4. **The Great Depression (1929-1939)**  
+5. **World War II (1939-1945)**  
+6. **The Early Cold War (1947-1960)**  
+7. **The Civil Rights Movement (1961-1970)**  
+8. **The Late Cold War (1971-1991)**  
+9. **The Post-Cold War and the New World Order (1992-2001)** 
 ### Research Questions 
 
 1. How genres emerged through the years and defined periods ? Can we see some known events appear from this analyis
