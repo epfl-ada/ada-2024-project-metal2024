@@ -1,10 +1,14 @@
 from enum import Enum
+import pandas as pd
+import os
 
+# defining the constants that will be used in the project
 class constants(Enum):
     DATASET_PATH = "data/"
     NAMED_ENTITIES_PATH = "src/named_entities/named_entities.csv"
     NGRAMS_RESULTS_PATH = "src/ngrams/results/"
 
+# time periods map, used to group the movies by time period
 periods_map_ = { 
     "The Belle Époque (1900-1914)": {"start_year": 1900, "end_year": 1913}, 
     "World War I (1914-1918)": {"start_year": 1914, "end_year": 1919}, 
@@ -40,9 +44,6 @@ def inverse_dict():
 
 periods_map_inverse = inverse_dict()
 
-
-import pandas as pd
-import os
 
 def movies_groupby_and_plots(DATASET_PATH, GROUPBY, perform_groupby = False):
     """
@@ -98,6 +99,9 @@ def movies_groupby_and_plots(DATASET_PATH, GROUPBY, perform_groupby = False):
     return movies_df, movie_plots_df #[["Wikipedia movie ID", 'Movie release date']], movie_plots_df
 
 
+## correcting the named entities, grouping them
+## meaning that similar named entities will be grouped together
+
 def correct_locations(series: pd.Series) -> pd.Series:
     """group the locations from the named entities
     without counting the words multiple times
@@ -122,8 +126,7 @@ def correct_locations(series: pd.Series) -> pd.Series:
     return series.dropna()
 
 def correct_money(series: pd.Series) -> pd.Series:
-    """group the locations from the named entities
-    without counting the words multiple times
+    """group the "money terms" from the named entities
     """
     corrections = {
         "$": "dollars",

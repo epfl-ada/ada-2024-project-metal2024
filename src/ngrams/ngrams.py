@@ -17,7 +17,7 @@ if NLTK_TOKENIZING:
     nltk.download("stopwords")
     nltk.download("punkt")
 
-CUSTOM_STOPWORDS = [ # words that will be banned from our Ngram
+CUSTOM_STOPWORDS = [ # words that will be banned from our Ngram, as they are not relevant
     ",", ";", ".", "",  
     "and", "or", "but", "nor", "for", "yet", "the", "a", "an", "of", "in", "to", "on", "with", "by", "at", "from", "about", "as",
     "he", "she", "it", "they", "we", "I", "you", "is", "are", "was", "were", "be", "have", "has", "her", "his", "had", "do", "does", "will", "would",
