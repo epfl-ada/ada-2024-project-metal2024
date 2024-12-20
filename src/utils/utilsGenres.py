@@ -301,7 +301,7 @@ def plot_theme_over_periods(normalized_theme_periods_counts, themes, theme_color
                 mode='lines',  # Use lines for the plot
                 name=theme,  # Set the theme name for the legend
                 line=dict(color=theme_colors.get(theme, 'gray')),  # Use color mapping for each theme
-                hovertemplate='Year: %{x}<br>Number of Movies: %{y}<br>'  # Custom hover text
+                hovertemplate='Period: %{x}<br>Theme proportion: %{y}<br>'  # Custom hover text
             ))
 
     # Add buttons for hide/show functionality
