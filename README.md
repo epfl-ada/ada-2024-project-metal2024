@@ -80,10 +80,11 @@ Text processing techniques, such as tokenization, stop-word removal, and lemmati
 │   ├── named_entities (folder)  
 │   ├── ngrams (folder)  
 │   ├── datapreprocessing.ipynb  
-│   ├── utils.py  
-│   ├── utilsGenres.py  
-│   ├── utilsRatings.py  
-│   └── utilsWordcloud.py  
+│   ├── utils  
+│   │ ├── utils.py  
+│   │ ├── utilsGenres.py  
+│   │ ├── utilsRatings.py  
+│   │ └── utilsWordcloud.py  
 ├── tests  
 │   ├── All_Genres_Top_Periods.csv  
 │   ├── named_entities_tests.ipynb   
