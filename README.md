@@ -101,5 +101,5 @@ It follows the same order as the website and explains the website's ideas and ho
 - `./data/` contains the originial dataset, and the datasets resulting from the preprocessing steps
 - `src/datapreprocessing.ipynb` contains the preprocessing steps done for the data to be used directly in `results.ipynb`
 - `./tests/` contains multiple different tests done on plots processing including ngrams and named entities. 
-- `./src/` contains most of the code. `utils.py` and it's derivates `utilsGenres.py`, `utilsRatings.py` and `utilsWordcloud.py ` contain the code used for their respective parts.  
+- `./src/` contains most of the code. In folder `utils`, we have files `utils.py` and it's derivates `utilsGenres.py`, `utilsRatings.py` and `utilsWordcloud.py ` contain the code used for their respective parts.  
 Src subfolders `causal_inference`, `named_entities` and `ngrams` contain the code and results needed for these parts as they produce some files in their respective `results` folder.
