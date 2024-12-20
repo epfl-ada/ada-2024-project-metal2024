@@ -64,11 +64,11 @@ Text processing techniques, such as tokenization, stop-word removal, and lemmati
 - 20.12 Final P3 Deliverable
 
 ### Organization within the team: List of work done by each member
-- Timo: General Datastory writing and website Introduction (Website Part 1)
-- Lilly-Flore: Themes grouping and exploration (Website Part 2)
-- Mathis: General Datastory writing and Word cloud (Website Part 3)
-- Anoush: Ngrams,tf-idf/named_entities and causal inference (Website Part 4)
-- Emilien: Ratings analysis and ReadMe report (Website Part 5)
+- Timo: General Datastory writing and website Introduction (Website Introduction + Periods)
+- Lilly-Flore: Themes grouping and exploration (Website Part "Genre-ally Speaking: A Plot Twist in Movie History")
+- Mathis: General Datastory writing and Word cloud (Website Part "Let’s see what we are talking about !")
+- Anoush: Ngrams,tf-idf/named_entities and causal inference (Website Part "Causal Inference")
+- Emilien: Ratings analysis and ReadMe report (Website Part "Movie ratings, another metric for popularity ?")
 
 ### Project structure: 
 
